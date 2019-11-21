@@ -425,8 +425,76 @@ public class Reveris{
 	public void makeMove(int row, int col){
 		col = 7 - col;
 		if (isLegalMove(row,col)){
-			board[row][col] = whoseTurn();
-			currentPlayer = NOTwhoseTurn();
+			board[row][col] = NOTwhoseTurn();
+			currentPlayer = whoseTurn();
+			int horLeft  = 0;
+			int horRight = 0;
+			int vertUp = 0;
+			int vertDown = 0;
+			int diaLeftUp = 0;
+			int diaRightUp = 0;
+			int diaLeftDown = 0;
+			int diaRightDown = 0;
+
+			for(int i = 1; i<board.length; i++){
+				if(horRight == 0 && i+col<board[0].length){
+					if(board[row][i+col] == currentPlayer){						for(int j = i + col; j >= col; j--){
+							board[row][j] = currentPlayer;
+						}
+						horRight = 1;
+					}
+				}else if(horLeft == 0 && col - i >= 0){
+					if(board[row][col-i] == currentPlayer){
+						for(int j = col - i; j >= col; j++){
+							board[row][j] = currentPlayer;
+						}
+						horLeft = 1;
+					}
+				}else if(vertUp == 0 && row - i >= 0){
+					if(board[row - i][col] == currentPlayer){
+						for(int j = row - i; j >= row; j++){
+							board[j][col] = currentPlayer;
+						}
+						vertUp = 1;
+					}
+				}else if(vertDown == 0 && row + i < board[0].length){
+					if(board[row+i][col] == currentPlayer){
+						for(int j = i + row; j >= col; j--){
+							board[j][col] = currentPlayer;
+						}
+						vertDown = 1;
+					}
+				}else if(diaRightUp == 0 && row - i >= 0 && col + i < board[0].length){
+					if(board[row-i][col+i] == currentPlayer){
+						for(int j = 1; j <= i; j++){
+							board[row - j][col + j] = currentPlayer;
+						}
+						diaRightUp = 1;
+					}
+				}else if(diaLeftUp == 0 && row - i >= 0 && col - i >= 0){
+					if(board[row-i][col-i] == currentPlayer){
+						for(int j = 1; j <= i; j++){
+							board[row - j][col - j] = currentPlayer;
+						}
+						diaLeftUp = 1;
+					}
+				}else if(diaRightDown == 0 && row + i < board.length && col + i < board[0].length){
+					if(board[row+i][col+i] == currentPlayer){
+						for(int j = 1; j < i; j++){
+							board[row + j][col + j] = currentPlayer;
+						}
+						diaRightDown = 1;
+					}
+				}else if(diaLeftDown == 0 && row + i < board.length && col - i >= 0){
+					if(board[row+i][col-i] == currentPlayer){
+						for(int j = 1; j <= i; j++){
+							board[row + j][col - j] = currentPlayer;
+						}
+						diaLeftDown = 1;
+					}
+				}
+			}
+
 		} else {System.out.println("Invalid move, please try again.");}	
 	}
 
@@ -474,5 +542,23 @@ public class Reveris{
 		}else{
 			return 2;
 		}
+	}
+	public static void main(String[] args){
+		Reveris game = new Reveris();
+		game.ReversiGameLogic();
+		Scanner in = new Scanner(System.in);
+		int x, y;
+
+
+		System.out.println("Welcome to your Reversi Game. Take a look at your board.");
+		game.showGame();
+		for(;;){
+		System.out.println("Player " + game.whoseTurn() + ", please make your move. Enter the x and y coordinates of the move you want to make.\n");
+		System.out.print("X: ");
+		x = in.nextInt();
+		System.out.print("Y: ");
+		y = in.nextInt();		
+		game.makeMove(x,y);
+		game.showGame();}
 	}
 }
